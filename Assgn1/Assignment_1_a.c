@@ -1,68 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
-int main() 
-{
-	pid_t pid, grandchild_pid;
-	int child_count = 0, grandchild_count = 0;
+int main() {
+    pid_t pid, gpid;
+    int child_count = 0;
+    int grandchild_count = 0;
 
-	pid = fork();  // Creating the first child
+    pid = fork(); // First fork to create a child process
+    if (pid < 0) {
+        perror("Failed to fork");
+        exit(1); // Exit with an error code
+    } else if (pid == 0) {
+        // Child process
+        printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
+        child_count++;
 
-	if (pid < 0) 
-	{
-		printf("Fork failed!\n");
-		exit(1);  // Exit with failure status
-	}
+        gpid = fork(); // Fork again to create a grandchild
+        if (gpid < 0) {
+            perror("Failed to fork");
+            exit(1); // Exit with an error code
+        } else if (gpid == 0) {
+            // Grandchild process
+            printf("Grandchild Process: PID = %d, PPID = %d\n", getpid(), getppid());
+            printf("Displaying Roll Number: 123456\n"); // Replace with actual roll number
+            exit(0); // Successful termination of grandchild
+        } else {
+            // Child waits for grandchild to finish
+            wait(NULL);
+            grandchild_count++; // Increment grandchild count after it has been created
+            printf("Child Process: Total number of grandchild processes created: %d\n", grandchild_count);
+            exit(0); // Successful termination of child
+        }
+    } else {
+        // Parent process
+        printf("Parent Process: PID = %d\n", getpid());
+        printf("Waiting for child to finish...\n");
+        wait(NULL); // Wait for the child process to finish
 
-	if (pid == 0) 
-	
-	{  // Child process
-		printf("Child process created. PID: %d, PPID: %d\n", getpid(), getppid());
-		grandchild_pid = fork();  // Create grandchild
-
-		if (grandchild_pid < 0) 
-		{
-			printf("Fork failed for grandchild!\n");
-			exit(1);
-		}
-
-		else if (grandchild_pid == 0) 
-		{
-		      	// Grandchild process
-			printf("Grandchild process created. PID: %d, PPID: %d\n", getpid(), getppid());
-			printf("My roll number is: CSB22012\n");
-			exit(0);
-		} 
-		
-		else 
-		{
-		      	// Child waits for grandchild to finish
-			wait(NULL);
-			exit(0);
-		}
-
-	}
-       	else 
-	{      
-		// Parent process
-		child_count++;
-		wait(NULL);  // Wait for child to finish
-
-		// Since the grandchild is created by the child, we count the grandchild process here
-		if (pid > 0) 
-		{
-			grandchild_count++;
-		}
-
-		printf("Parent process. PID: %d, PPID: %d\n", getpid(), getppid());
-		printf("Number of child processes created: %d\n", child_count);
-		printf("Number of grandchild processes created: %d\n", grandchild_count);
-
-		exit(0);
-	}
-return 0;
+        child_count = 1; // Only one direct child
+        printf("Total number of child processes created: %d\n", child_count);
+        printf("Total number of grandchild processes created: %d\n", grandchild_count);
+        exit(0); // Successful termination of parent
+    }
 }
-
