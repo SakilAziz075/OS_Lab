@@ -22,6 +22,7 @@ void handler(int num)
         printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
         exit(0);
     } 
+    
     else  
     {
         printf("Parent Process: PID = %d, Child PID = %d\n", getpid(), pid);

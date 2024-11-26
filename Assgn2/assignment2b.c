@@ -4,7 +4,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-int main() {
+int main() 
+{
         pid_t pid;
         int sig;
 
@@ -12,11 +13,16 @@ int main() {
         scanf("%d", &pid);
         printf("Enter Signal ID: ");
         scanf("%d", &sig);
+
 // Send the specified signal to the specified process
-        if (kill(pid, sig) == -1) {
+        
+        if (kill(pid, sig) == -1) 
+        {
                 printf("Failed to send signal");
                 exit(1);
-        } else {
+        } 
+        else 
+        {
                 printf("Signal %d sent to process %d\n", sig, pid);
         }
 

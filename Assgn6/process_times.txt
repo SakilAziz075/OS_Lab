@@ -1,0 +1,6 @@
+Submission Time: 1732610188.102091 seconds
+Termination Time of Child Process: 1732610190.102764 seconds
+CPU Time used by Child Process: 0 ticks
+Submission Time: 1732610188.102091 seconds
+Termination Time of Parent Process: 1732610190.103371 seconds
+CPU Time used by Parent Process: 0 ticks
